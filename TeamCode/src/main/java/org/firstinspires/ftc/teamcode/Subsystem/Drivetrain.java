@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Subsystem;
 
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.FORWARD;
 import static com.qualcomm.robotcore.hardware.DcMotorSimple.Direction.REVERSE;
@@ -11,10 +11,11 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.Range;
 
-import static org.firstinspires.ftc.teamcode.IDs.*;
-import static org.firstinspires.ftc.teamcode.Constants.*;
+import static org.firstinspires.ftc.teamcode.Util.IDs.*;
+import static org.firstinspires.ftc.teamcode.Util.Constants.*;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Util.PIDController;
 
 public class Drivetrain {
 
@@ -112,10 +113,10 @@ public class Drivetrain {
             this.wheelSpeeds[3] /= maxPower;
         }
 
-        this.motorFL.setPower(wheelSpeeds[0]);
-        this.motorFR.setPower(wheelSpeeds[1]);
-        this.motorBL.setPower(wheelSpeeds[2]);
-        this.motorBR.setPower(wheelSpeeds[3]);
+        this.motorFL.setPower(this.wheelSpeeds[0]);
+        this.motorFR.setPower(this.wheelSpeeds[1]);
+        this.motorBL.setPower(this.wheelSpeeds[2]);
+        this.motorBR.setPower(this.wheelSpeeds[3]);
     }
 
     // These parameters are in Inches per second
@@ -149,15 +150,14 @@ public class Drivetrain {
         return (currentFLVelocity + currentFRVelocity + currentBRVelocity + currentBLVelocity) / 4;
     }
 
+    // In inches
     public double distanceToEncoderCount(double desiredDistanceInInches) {
         return desiredDistanceInInches * ENCODER_COUNT_PER_INCH;
     }
 
+    // In inches per second
     public double velocityToEncoderCount(double desiredVelocity) {
-        double desiredRPM = (60 * desiredVelocity) / (GEAR_RATIO * WHEEL_CIRCUFERENCE);
-        double ticksPerSecond = (desiredRPM / 60) * ENCODER_COUNT_PER_WHEEL_REVOLUTION;
-
-        return ticksPerSecond;
+        return desiredVelocity * ENCODER_COUNT_PER_INCH;
     }
 
     public void drivetrainData(Telemetry telemetry) {
@@ -165,6 +165,11 @@ public class Drivetrain {
         telemetry.addData("Front Right: ", this.motorFR.getCurrentPosition());
         telemetry.addData("Back Left: ", this.motorBL.getCurrentPosition() * -1);
         telemetry.addData("Back Right: ", this.motorBR.getCurrentPosition());
+
+        telemetry.addData("Velocity FL: ", this.motorFL.getVelocity());
+        telemetry.addData("Velocity FR:", this.motorBR.getVelocity());
+        telemetry.addData("Velocity BL: ", this.motorBL.getVelocity());
+        telemetry.addData("Velocity BR: ", this.motorBR.getVelocity());
         telemetry.update();
     }
 }

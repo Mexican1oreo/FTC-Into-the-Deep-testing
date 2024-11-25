@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Util;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 
@@ -26,12 +26,11 @@ public class Constants {
     public static double MAX_MOTOR_WHEEL_VELOCITY =
             (MAX_RPM / 60) * GEAR_RATIO * WHEEL_CIRCUFERENCE; // In inches per second
 
+    public double velocityToEncoderCount(double desiredVelocity) {
+        return desiredVelocity * ENCODER_COUNT_PER_INCH;
+    }
+
     public static double MAX_VELOCITY = 50; // Inches per second
     public static double MAX_ACCELERATION = 0;
     public static double MAX_ANGULAR_VELOCITY = 0;
-
-    // Drivetrain PID constants
-    public static double DRIVETRAIN_P = 1;
-    public static double DRIVETRAIN_I = 0;
-    public static double DRIVETRAIN_D = 0;
 }
