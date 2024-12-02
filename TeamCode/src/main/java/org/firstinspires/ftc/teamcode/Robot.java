@@ -27,9 +27,9 @@ public class Robot extends OpMode {
         this.drivetrain.mechanumDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
         if(gamepad2.a) {
-            this.linearSlide.goToState(RobotStates.LinearSlide.HIGH_SCORE, -10_000);
-        } else if(gamepad2.b) {
-            this.linearSlide.goToState(RobotStates.LinearSlide.START_POS, 10_000);
+            this.linearSlide.goToState(RobotStates.LinearSlide.HIGH_SCORE, -10_000, telemetry);
+        } else {
+            this.linearSlide.goToState(RobotStates.LinearSlide.START_POS, 10_000, telemetry);
         }
     }
 }
