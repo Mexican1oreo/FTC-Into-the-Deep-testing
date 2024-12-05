@@ -67,24 +67,11 @@ public class LinearSlide {
     }
 
     public void setState(RobotStates.LinearSlide desiredState) {
-        switch (desiredState) {
-            case START_POS:
-                currentSlideState = RobotStates.LinearSlide.START_POS;
-                break;
-
-            case LOW_SCORE:
-                currentSlideState = RobotStates.LinearSlide.LOW_SCORE;
-                break;
-
-            case HIGH_SCORE:
-                currentSlideState = RobotStates.LinearSlide.HIGH_SCORE;
-                break;
-        }
+        currentSlideState = desiredState;
     }
 
     public void goToState(Telemetry telemetry) {
         RobotStates.LinearSlide desiredState = this.getCurrentState();
-        this.currentSlideState = desiredState;
 
         int desiredStateEncoderVal = this.getStateEncoderVal(desiredState);
 
