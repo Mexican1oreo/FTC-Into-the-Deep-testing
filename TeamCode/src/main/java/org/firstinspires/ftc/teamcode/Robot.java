@@ -8,11 +8,13 @@ import org.firstinspires.ftc.teamcode.Subsystem.Drivetrain;
 import org.firstinspires.ftc.teamcode.Subsystem.LinearSlide;
 import org.firstinspires.ftc.teamcode.Util.RobotStates;
 
+import static org.firstinspires.ftc.teamcode.Util.Toggle.toggleButton;
+
 @TeleOp
 public class Robot extends OpMode {
-    Drivetrain drivetrain = new Drivetrain();
-    Arm arm = new Arm();
-    LinearSlide linearSlide = new LinearSlide();
+    private final Drivetrain drivetrain = new Drivetrain();
+    private final Arm arm = new Arm();
+    private final LinearSlide linearSlide = new LinearSlide();
 
     public void init() {
         this.drivetrain.init(hardwareMap);
@@ -24,12 +26,15 @@ public class Robot extends OpMode {
     public void loop() {
         this.linearSlide.slideData(telemetry);
 
-        this.drivetrain.mechanumDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
-
         if(gamepad2.a) {
-            this.linearSlide.goToState(RobotStates.LinearSlide.HIGH_SCORE, -10_000, telemetry);
-        } else {
-            this.linearSlide.goToState(RobotStates.LinearSlide.START_POS, 10_000, telemetry);
+            if(toggleButton(gamepad2.a)) {
+                this.linearSlide.setState(RobotStates.LinearSlide.HIGH_SCORE);
+            } else if(toggleButton(gamepad2.a)) {
+                this.linearSlide.setState(RobotStates.LinearSlide.START_POS);
+            }
         }
+
+        this.drivetrain.mechanumDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        this.linearSlide.goToState(telemetry);
     }
 }

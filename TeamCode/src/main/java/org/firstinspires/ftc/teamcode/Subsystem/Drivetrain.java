@@ -15,7 +15,6 @@ import static org.firstinspires.ftc.teamcode.Util.IDs.*;
 import static org.firstinspires.ftc.teamcode.Util.Constants.*;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.Util.PIDController;
 
 public class Drivetrain {
 
@@ -61,23 +60,23 @@ public class Drivetrain {
         this.imu.initialize(new IMU.Parameters(HUB_ORIENTATION));
     }
 
-    public void autoInit(HardwareMap hardwareMap) {
-
-        this.motorFL.setDirection(REVERSE);
-        this.motorFR.setDirection(FORWARD);
-        this.motorBL.setDirection(REVERSE);
-        this.motorBR.setDirection(REVERSE);
-
-        this.motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.motorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        this.motorBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        this.motorFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        this.motorFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        this.motorBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        this.motorBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    }
+//    public void autoInit(HardwareMap hardwareMap) {
+//
+//        this.motorFL.setDirection(REVERSE);
+//        this.motorFR.setDirection(FORWARD);
+//        this.motorBL.setDirection(REVERSE);
+//        this.motorBR.setDirection(REVERSE);
+//
+//        this.motorFL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        this.motorFR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        this.motorBL.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        this.motorBR.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//
+//        this.motorFL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        this.motorFR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        this.motorBL.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//        this.motorBR.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+//    }
 
     public void mechanumDrive(
             double strafeSpeed,

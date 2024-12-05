@@ -15,13 +15,13 @@ import static org.firstinspires.ftc.teamcode.Util.Tuning.*;
 public class LinearSlide {
     private DcMotorEx leftSlideMotor;
     private DcMotorEx rightSlideMotor;
-
-    private PIDController leftPIDController;
-    private PIDController rightPIDController;
-
-    private RobotStates.LinearSlide linearSlideStates = RobotStates.LinearSlide.START_POS;
-    private int slideEncoderValue;
     private VoltageSensor controlHubVoltageSensor;
+
+    private PIDController leftPIDController = new PIDController(LINEAR_SLIDE_P, LINEAR_SLIDE_I, LINEAR_SLIDE_D);
+    private PIDController rightPIDController = new PIDController(LINEAR_SLIDE_P, LINEAR_SLIDE_I, LINEAR_SLIDE_D);
+
+    private RobotStates.LinearSlide currentSlideState = RobotStates.LinearSlide.START_POS;
+    private int slideEncoderValue;
 
     public void init(HardwareMap hardwareMap) {
         this.leftSlideMotor = hardwareMap.get(DcMotorEx.class, LEFT_SLIDE_MOTOR_ID);
@@ -46,7 +46,7 @@ public class LinearSlide {
     }
 
     public RobotStates.LinearSlide getCurrentState() {
-        return linearSlideStates;
+        return currentSlideState;
     }
 
     public int getStateEncoderVal(RobotStates.LinearSlide linearSlideState) {
@@ -60,49 +60,52 @@ public class LinearSlide {
                 break;
 
             case HIGH_SCORE:
-                slideEncoderValue = 4_000;
+                slideEncoderValue = 2_000;
                 break;
         }
         return slideEncoderValue;
     }
 
-//    public void goToState(RobotStates.LinearSlide desiredState, double velocity) {
-//        int currentLeftPos = this.leftSlideMotor.getCurrentPosition() * -1;
-//        int currentRightPos = this.rightSlideMotor.getCurrentPosition() * -1;
-//
-//        this.linearSlideStates = desiredState;
-//
-//        int desiredEncoderVal = this.getStateEncoderVal(desiredState);
-//
-//        int error = desiredEncoderVal - ((currentLeftPos + currentRightPos) / 2);
-//
-//        this.leftSlideMotor.setTargetPosition(desiredEncoderVal);
-//        this.rightSlideMotor.setTargetPosition(desiredEncoderVal * -1);
-//
-//        if(Math.abs(error) > 50) {
-//            this.leftSlideMotor.setVelocity(velocity);
-//            this.rightSlideMotor.setVelocity(velocity);
-//        } else {
-//            this.leftSlideMotor.setVelocity(0);
-//            this.rightSlideMotor.setVelocity(0);
-//        }
-//    }
+    public void setState(RobotStates.LinearSlide desiredState) {
+        switch (desiredState) {
+            case START_POS:
+                currentSlideState = RobotStates.LinearSlide.START_POS;
+                break;
 
-    public void goToState(RobotStates.LinearSlide desiredState) {
-        this.linearSlideStates = desiredState;
+            case LOW_SCORE:
+                currentSlideState = RobotStates.LinearSlide.LOW_SCORE;
+                break;
+
+            case HIGH_SCORE:
+                currentSlideState = RobotStates.LinearSlide.HIGH_SCORE;
+                break;
+        }
+    }
+
+    public void goToState(Telemetry telemetry) {
+        RobotStates.LinearSlide desiredState = this.getCurrentState();
+        this.currentSlideState = desiredState;
 
         int desiredStateEncoderVal = this.getStateEncoderVal(desiredState);
 
-        while((this.leftSlideMotor.getCurrentPosition() * -1) != desiredStateEncoderVal){
-            int currentLeftPos = this.leftSlideMotor.getCurrentPosition() * -1;
-            double leftOutput = leftPIDController.calculate(desiredStateEncoderVal, currentLeftPos);
-            this.leftSlideMotor.setPower(leftOutput);
-        }
+        double slowConstant = 2;
 
-        while((this.rightSlideMotor.getCurrentPosition() * -1) != desiredStateEncoderVal){
-            int currentRightPos = this.rightSlideMotor.getCurrentPosition() * -1;
-            double rightOutput = rightPIDController.calculate(desiredStateEncoderVal, currentRightPos);
-            this.rightSlideMotor.setPower(rightOutput);
+//        int currentLeftPos = this.leftSlideMotor.getCurrentPosition() * -1;
+//        double leftOutput = leftPIDController.calculate(desiredStateEncoderVal, currentLeftPos, telemetry);
+
+        int currentRightPos = this.rightSlideMotor.getCurrentPosition() * -1;
+        double rightOutput = this.rightPIDController.calculate(desiredStateEncoderVal, currentRightPos, telemetry);
+
+//        if((this.leftSlideMotor.getCurrentPosition() * -1) != desiredStateEncoderVal){
+//            this.leftSlideMotor.setPower(-leftOutput / slowConstant);
+//        } else {
+//            this.leftSlideMotor.setPower(0);
+//        }
+
+        if((this.rightSlideMotor.getCurrentPosition()) != desiredStateEncoderVal){
+            this.rightSlideMotor.setPower(-rightOutput / slowConstant);
+        } else {
+            this.rightSlideMotor.setPower(0);
         }
     }
 

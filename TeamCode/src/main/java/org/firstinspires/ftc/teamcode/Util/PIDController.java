@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.Util;
 
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 public class PIDController {
     private final double P;
     private final double I;
@@ -17,7 +19,7 @@ public class PIDController {
         this.D = D;
     }
 
-    public double calculate(double setPoint, double currentPosition) {
+    public double calculate(double setPoint, double currentPosition, Telemetry telemetry) {
         double error = setPoint - currentPosition;
         integral += error * timer.seconds();
         double derivative = (error - previousError) / timer.seconds();
@@ -25,6 +27,7 @@ public class PIDController {
         double output = (P * error) + (I * integral) + (D * derivative);
 
         previousError = error;
+        telemetry.addLine("THis: " + error);
         timer.reset();
 
         return output;

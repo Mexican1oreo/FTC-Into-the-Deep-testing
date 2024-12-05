@@ -13,7 +13,7 @@ public class Tuning {
     public static double CLAW_I = 0;
     public static double CLAW_D = 0;
 
-    public static double LINEAR_SLIDE_P = 0;
+    public static double LINEAR_SLIDE_P = 1;
     public static double LINEAR_SLIDE_I = 0;
     public static double LINEAR_SLIDE_D = 0;
 }
