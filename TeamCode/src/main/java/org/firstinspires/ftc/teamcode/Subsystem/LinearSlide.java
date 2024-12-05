@@ -48,6 +48,9 @@ public class LinearSlide {
     public RobotStates.LinearSlide getCurrentState() {
         return currentSlideState;
     }
+    public void setState(RobotStates.LinearSlide desiredState) {
+        currentSlideState = desiredState;
+    }
 
     public int getStateEncoderVal(RobotStates.LinearSlide linearSlideState) {
         switch (linearSlideState) {
@@ -64,10 +67,6 @@ public class LinearSlide {
                 break;
         }
         return slideEncoderValue;
-    }
-
-    public void setState(RobotStates.LinearSlide desiredState) {
-        currentSlideState = desiredState;
     }
 
     public void goToState(Telemetry telemetry) {
@@ -89,11 +88,13 @@ public class LinearSlide {
 //            this.leftSlideMotor.setPower(0);
 //        }
 
-        if((this.rightSlideMotor.getCurrentPosition()) != desiredStateEncoderVal){
-            this.rightSlideMotor.setPower(-rightOutput / slowConstant);
-        } else {
-            this.rightSlideMotor.setPower(0);
-        }
+//        if((this.rightSlideMotor.getCurrentPosition()) != desiredStateEncoderVal){
+//            this.rightSlideMotor.setPower(-rightOutput / slowConstant);
+//        } else {
+//            this.rightSlideMotor.setPower(0);
+//        }
+
+        this.rightSlideMotor.setPower(rightOutput / slowConstant);
     }
 
     public void setSlidePower(double leftTrigger, double rightTrigger) {

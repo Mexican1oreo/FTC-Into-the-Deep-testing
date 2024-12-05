@@ -27,7 +27,7 @@ public class PIDController {
         double output = (P * error) + (I * integral) + (D * derivative);
 
         previousError = error;
-        telemetry.addLine("THis: " + error);
+        telemetry.addLine("Error: " + error);
         timer.reset();
 
         return output;
