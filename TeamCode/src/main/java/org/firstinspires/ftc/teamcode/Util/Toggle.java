@@ -10,6 +10,7 @@ public class Toggle {
     private int counter = 1;
     private final ElapsedTime timer = new ElapsedTime();
     private boolean pressedInTime = false;
+    // Thank you Charlie
 
     public boolean toggleButton(boolean input) {
         boolean wasPressed;
