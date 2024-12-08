@@ -35,6 +35,7 @@ public class Constants {
     public static double LINEAR_SLIDE_WHEEL_CIRCUFERENCE = 0; // In inches
 
     public static double MAX_LINEAR_SLIDE_RPM = 312; // Inches per second
+    public static int MAX_LINEAR_SLIDE_EXTENTION = 2000;
     public static double MAX_LINEAR_SLIDE_VELOCITY =
             (MAX_LINEAR_SLIDE_RPM / 60) * LINEAR_SLIDE_GEAR_RATIO * LINEAR_SLIDE_WHEEL_CIRCUFERENCE;
 }

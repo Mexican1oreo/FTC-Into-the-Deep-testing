@@ -19,7 +19,7 @@ public class PIDController {
         this.D = D;
     }
 
-    public double calculate(double setPoint, double currentPosition, Telemetry telemetry) {
+    public double calculate(double setPoint, double currentPosition) {
         double error = setPoint - currentPosition;
         integral += error * timer.seconds();
         double derivative = (error - previousError) / timer.seconds();
@@ -27,7 +27,6 @@ public class PIDController {
         double output = (P * error) + (I * integral) + (D * derivative);
 
         previousError = error;
-        telemetry.addLine("Error: " + error);
         timer.reset();
 
         return output;

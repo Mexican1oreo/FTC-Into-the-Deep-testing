@@ -13,12 +13,17 @@ public class RobotStates {
 
     public enum LinearSlide {
         START_POS,
-        LOW_SCORE,
+        MANUEL,
         HIGH_SCORE
     }
 
-    public enum wrist {
+    public enum Wrist {
         FLOOR,
         SCORE
+    }
+
+    public enum Drivetrain {
+        FULL_SPEED,
+        HALF_SPEED
     }
 }

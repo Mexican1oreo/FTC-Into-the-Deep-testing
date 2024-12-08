@@ -1,12 +1,27 @@
 package org.firstinspires.ftc.teamcode.Util;
 
-public class Toggle {
-    public static boolean toggleButton(boolean input) {
-        boolean wasPressed;
-        int counter = 1;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
-        if(input) {
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+import java.util.concurrent.TimeUnit;
+
+public class Toggle {
+    private int counter = 1;
+    private final ElapsedTime timer = new ElapsedTime();
+    private boolean pressedInTime = false;
+
+    public boolean toggleButton(boolean input) {
+        boolean wasPressed;
+
+        if(input && !pressedInTime) {
             counter++;
+            pressedInTime = true;
+            timer.reset();
+        }
+
+        if(timer.time(TimeUnit.MILLISECONDS) >= 200) {
+            pressedInTime = false;
         }
 
         if(counter % 2 == 0) {
@@ -14,7 +29,6 @@ public class Toggle {
         } else {
             wasPressed = false;
         }
-
         return wasPressed;
     }
 }

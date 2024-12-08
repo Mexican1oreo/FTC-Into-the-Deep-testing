@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Subsystem;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.Util.PIDController;
 
 import static org.firstinspires.ftc.teamcode.Util.IDs.*;
 import static org.firstinspires.ftc.teamcode.Util.Tuning.*;
+import static org.firstinspires.ftc.teamcode.Util.Constants.*;
 
 public class LinearSlide {
     private DcMotorEx leftSlideMotor;
@@ -22,6 +24,7 @@ public class LinearSlide {
 
     private RobotStates.LinearSlide currentSlideState = RobotStates.LinearSlide.START_POS;
     private int slideEncoderValue;
+    private int customEncoderVal;
 
     public void init(HardwareMap hardwareMap) {
         this.leftSlideMotor = hardwareMap.get(DcMotorEx.class, LEFT_SLIDE_MOTOR_ID);
@@ -58,8 +61,8 @@ public class LinearSlide {
                 slideEncoderValue = 0;
                 break;
 
-            case LOW_SCORE:
-                slideEncoderValue = 100;
+            case MANUEL:
+                slideEncoderValue = customEncoderVal;
                 break;
 
             case HIGH_SCORE:
@@ -69,35 +72,38 @@ public class LinearSlide {
         return slideEncoderValue;
     }
 
-    public void goToState(Telemetry telemetry) {
+    public void goToState(int leftVal, int rightVal) {
         RobotStates.LinearSlide desiredState = this.getCurrentState();
 
         int desiredStateEncoderVal = this.getStateEncoderVal(desiredState);
 
-        double slowConstant = 2;
-
-//        int currentLeftPos = this.leftSlideMotor.getCurrentPosition() * -1;
-//        double leftOutput = leftPIDController.calculate(desiredStateEncoderVal, currentLeftPos, telemetry);
+        int currentLeftPos = this.leftSlideMotor.getCurrentPosition() * -1;
+        double leftOutput = leftPIDController.calculate(desiredStateEncoderVal, -currentLeftPos);
 
         int currentRightPos = this.rightSlideMotor.getCurrentPosition() * -1;
-        double rightOutput = this.rightPIDController.calculate(desiredStateEncoderVal, currentRightPos, telemetry);
+        double rightOutput = this.rightPIDController.calculate(desiredStateEncoderVal, -currentRightPos);
 
-//        if((this.leftSlideMotor.getCurrentPosition() * -1) != desiredStateEncoderVal){
-//            this.leftSlideMotor.setPower(-leftOutput / slowConstant);
-//        } else {
-//            this.leftSlideMotor.setPower(0);
-//        }
+        this.leftSlideMotor.setPower(leftOutput);
+        this.rightSlideMotor.setPower(rightOutput);
 
-//        if((this.rightSlideMotor.getCurrentPosition()) != desiredStateEncoderVal){
-//            this.rightSlideMotor.setPower(-rightOutput / slowConstant);
-//        } else {
-//            this.rightSlideMotor.setPower(0);
-//        }
+        if(desiredState == RobotStates.LinearSlide.MANUEL) {
+            customEncoderVal = rightVal * MAX_LINEAR_SLIDE_EXTENTION - leftVal * MAX_LINEAR_SLIDE_EXTENTION;
+            leftOutput = leftPIDController.calculate(customEncoderVal, -currentLeftPos);
+            rightOutput = this.rightPIDController.calculate(customEncoderVal, -currentRightPos);
 
-        this.rightSlideMotor.setPower(rightOutput / slowConstant);
+            this.leftSlideMotor.setPower(leftOutput);
+            this.rightSlideMotor.setPower(rightOutput);
+        }
+
+        if(Math.abs(desiredStateEncoderVal - currentLeftPos) <= LINEAR_SLIDE_THRESHOLD) {
+            leftSlideMotor.setPower(0);
+        }
+        if(Math.abs(desiredStateEncoderVal - currentRightPos) <= LINEAR_SLIDE_THRESHOLD) {
+            rightSlideMotor.setPower(0);
+        }
     }
 
-    public void setSlidePower(double leftTrigger, double rightTrigger) {
+    public void setSlidePower(float leftTrigger, float rightTrigger) {
         double voltageCorrection = 12 / controlHubVoltageSensor.getVoltage();
 
         this.leftSlideMotor.setPower((rightTrigger - leftTrigger) * voltageCorrection);
