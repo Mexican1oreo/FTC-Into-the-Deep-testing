@@ -15,6 +15,7 @@ import static org.firstinspires.ftc.teamcode.Util.IDs.*;
 import static org.firstinspires.ftc.teamcode.Util.Constants.*;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Util.RobotStates;
 
 public class Drivetrain {
 
@@ -27,6 +28,7 @@ public class Drivetrain {
     private IMU imu;
     private double[] wheelSpeeds = new double[4];
     private double maxPower = 1;
+    private RobotStates.Drivetrain currentDrivetrainMode = RobotStates.Drivetrain.FULL_SPEED;
 
     public void init(HardwareMap hardwareMap) {
 
@@ -81,7 +83,8 @@ public class Drivetrain {
     public void mechanumDrive(
             double strafeSpeed,
             double forwardSpeed,
-            double turnSpeed)
+            double turnSpeed,
+            boolean isHalfSpeed)
     {
 
         Vector2d input = new Vector2d(strafeSpeed, forwardSpeed);
@@ -112,10 +115,23 @@ public class Drivetrain {
             this.wheelSpeeds[3] /= maxPower;
         }
 
-        this.motorFL.setPower(this.wheelSpeeds[0] * 2);
-        this.motorFR.setPower(this.wheelSpeeds[1] * 2);
-        this.motorBL.setPower(this.wheelSpeeds[2] * 2);
-        this.motorBR.setPower(this.wheelSpeeds[3] * 2);
+        if(isHalfSpeed) {
+            this.setDrivetrainMode(RobotStates.Drivetrain.HALF_SPEED);
+        } else {
+            this.setDrivetrainMode(RobotStates.Drivetrain.FULL_SPEED);
+        }
+
+        if(this.getDrivetrainMode() == RobotStates.Drivetrain.HALF_SPEED) {
+            this.motorFL.setPower(this.wheelSpeeds[0]);
+            this.motorFR.setPower(this.wheelSpeeds[1]);
+            this.motorBL.setPower(this.wheelSpeeds[2]);
+            this.motorBR.setPower(this.wheelSpeeds[3]);
+        } else {
+            this.motorFL.setPower(this.wheelSpeeds[0] * 2);
+            this.motorFR.setPower(this.wheelSpeeds[1] * 2);
+            this.motorBL.setPower(this.wheelSpeeds[2] * 2);
+            this.motorBR.setPower(this.wheelSpeeds[3] * 2);
+        }
     }
 
     // These parameters are in Inches per second
@@ -137,6 +153,14 @@ public class Drivetrain {
         this.motorBL.setVelocity(encoderVelocity);
         this.motorFR.setVelocity(encoderVelocity);
         this.motorBR.setVelocity(encoderVelocity);
+    }
+
+    public RobotStates.Drivetrain getDrivetrainMode() {
+        return this.currentDrivetrainMode;
+    }
+
+    public void setDrivetrainMode(RobotStates.Drivetrain desiredMode) {
+        this.currentDrivetrainMode = desiredMode;
     }
 
     //Returns in ticks per second

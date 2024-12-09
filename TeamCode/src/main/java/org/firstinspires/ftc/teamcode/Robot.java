@@ -25,8 +25,8 @@ public class Robot extends OpMode {
     private final Raise raiseCommand = new Raise(linearSlide, arm, wrist);
     private final Lower lowerCommand = new Lower(linearSlide, arm, wrist);
 
+    private final Toggle drivetrainToggle = new Toggle();
     private final Toggle raiseToggle = new Toggle();
-    private final Toggle clawToggle = new Toggle();
     
     public void init() {
         this.drivetrain.init(hardwareMap);
@@ -52,7 +52,12 @@ public class Robot extends OpMode {
             }
         }
 
-        this.drivetrain.mechanumDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
+        this.drivetrain.mechanumDrive(
+                gamepad1.left_stick_x,
+                gamepad1.left_stick_y,
+                gamepad1.right_stick_x,
+                drivetrainToggle.toggleButton(gamepad1.a)
+        );
 
         this.linearSlide.goToState(gamepad2);
         this.arm.goToState();
