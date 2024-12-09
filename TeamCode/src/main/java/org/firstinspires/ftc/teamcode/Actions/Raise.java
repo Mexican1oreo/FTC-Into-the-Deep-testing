@@ -22,7 +22,7 @@ public class Raise {
     }
 
     public void raise() {
-        if(!hasReset) {
+        if (!hasReset) {
             this.timer.reset();
             hasReset = true;
         } else {

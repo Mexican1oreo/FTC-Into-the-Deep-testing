@@ -15,17 +15,17 @@ public class Toggle {
     public boolean toggleButton(boolean input) {
         boolean wasPressed;
 
-        if(input && !pressedInTime) {
+        if (input && !pressedInTime) {
             counter++;
             pressedInTime = true;
             timer.reset();
         }
 
-        if(timer.time(TimeUnit.MILLISECONDS) >= 200) {
+        if (timer.time(TimeUnit.MILLISECONDS) >= 200) {
             pressedInTime = false;
         }
 
-        if(counter % 2 == 0) {
+        if (counter % 2 == 0) {
             wasPressed = true;
         } else {
             wasPressed = false;

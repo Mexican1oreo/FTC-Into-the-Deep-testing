@@ -60,7 +60,7 @@ public class Arm {
 
         this.armMotor.setPower(armOutput);
 
-        if(Math.abs(desiredEncoderValue - currentArmPos) <= ARM_THRESHOLD) {
+        if (Math.abs(desiredEncoderValue - currentArmPos) <= ARM_THRESHOLD) {
             this.armMotor.setPower(0);
         }
     }

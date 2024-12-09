@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.Util.PIDController;
 
 import static org.firstinspires.ftc.teamcode.Util.IDs.*;
 import static org.firstinspires.ftc.teamcode.Util.Tuning.*;
-import static org.firstinspires.ftc.teamcode.Util.Constants.*;
 
 public class LinearSlide {
     private DcMotorEx leftSlideMotor;
@@ -86,14 +85,14 @@ public class LinearSlide {
         this.leftSlideMotor.setPower(leftOutput);
         this.rightSlideMotor.setPower(rightOutput);
 
-        if(desiredState == RobotStates.LinearSlide.MANUEL) {
+        if (desiredState == RobotStates.LinearSlide.MANUEL) {
             this.manualMode(gamepad);
         }
 
-        if(Math.abs(desiredStateEncoderVal - currentLeftPos) <= LINEAR_SLIDE_THRESHOLD) {
+        if (Math.abs(desiredStateEncoderVal - currentLeftPos) <= LINEAR_SLIDE_THRESHOLD) {
             leftSlideMotor.setPower(0);
         }
-        if(Math.abs(desiredStateEncoderVal - currentRightPos) <= LINEAR_SLIDE_THRESHOLD) {
+        if (Math.abs(desiredStateEncoderVal - currentRightPos) <= LINEAR_SLIDE_THRESHOLD) {
             rightSlideMotor.setPower(0);
         }
     }
@@ -107,7 +106,7 @@ public class LinearSlide {
 
         this.customEncoderVal = (int) (rightVal + leftVal);
 
-        if(customEncoderVal > LINEAR_SLIDE_MANUAL_LIMIT) {
+        if (customEncoderVal > LINEAR_SLIDE_MANUAL_LIMIT) {
             customEncoderVal = LINEAR_SLIDE_MANUAL_LIMIT;
         }
 

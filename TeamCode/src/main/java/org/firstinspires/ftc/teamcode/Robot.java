@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Actions.Lower;
 import org.firstinspires.ftc.teamcode.Actions.Raise;
@@ -41,12 +40,12 @@ public class Robot extends OpMode {
         this.linearSlide.slideData(telemetry);
         this.arm.armTelemetry(telemetry);
 
-        if(raiseToggle.toggleButton(gamepad2.y)) {
-            if(wrist.getCurrentState() != RobotStates.Wrist.SCORE) {
+        if (raiseToggle.toggleButton(gamepad2.y)) {
+            if (wrist.getCurrentState() != RobotStates.Wrist.SCORE) {
                 this.raiseCommand.raise();
             }
         } else {
-            if(this.wrist.getCurrentState() != RobotStates.Wrist.FLOOR) {
+            if (this.wrist.getCurrentState() != RobotStates.Wrist.FLOOR) {
                 this.lowerCommand.lower();
                 this.linearSlide.setState(RobotStates.LinearSlide.MANUEL);
             }
@@ -61,7 +60,6 @@ public class Robot extends OpMode {
 
         this.linearSlide.goToState(gamepad2);
         this.arm.goToState();
-
         this.wrist.goToState(gamepad2);
         this.claw.goToState();
     }

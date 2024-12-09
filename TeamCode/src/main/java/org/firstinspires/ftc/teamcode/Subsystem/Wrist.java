@@ -41,9 +41,9 @@ public class Wrist {
 
     public void goToState(Gamepad gamepad) {
 
-        if(gamepad.right_bumper) {
+        if (gamepad.right_bumper) {
             this.setState(RobotStates.Wrist.SCORE);
-        } else if(gamepad.left_bumper) {
+        } else if (gamepad.left_bumper) {
             this.setState(RobotStates.Wrist.FLOOR);
         }
 

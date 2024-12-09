@@ -100,7 +100,7 @@ public class Drivetrain {
 
         double voltageCorrection = 12 / controlHubVoltageSensor.getVoltage();
 
-        for(int i = 0; i < this.wheelSpeeds.length; i++) {
+        for (int i = 0; i < this.wheelSpeeds.length; i++) {
             this.wheelSpeeds[i] = Math.abs(this.wheelSpeeds[i]) < 0.01 ?
                     this.wheelSpeeds[i] * voltageCorrection :
                     (this.wheelSpeeds[i] + Math.signum(this.wheelSpeeds[i]) * 0.085) * voltageCorrection;
@@ -108,20 +108,20 @@ public class Drivetrain {
 
         for(double wheelSpeeds : wheelSpeeds) maxPower = Math.max(maxPower, Math.abs(wheelSpeeds));
 
-        if(maxPower > 1) {
+        if (maxPower > 1) {
             this.wheelSpeeds[0] /= maxPower;
             this.wheelSpeeds[1] /= maxPower;
             this.wheelSpeeds[2] /= maxPower;
             this.wheelSpeeds[3] /= maxPower;
         }
 
-        if(isHalfSpeed) {
+        if (isHalfSpeed) {
             this.setDrivetrainMode(RobotStates.Drivetrain.HALF_SPEED);
         } else {
             this.setDrivetrainMode(RobotStates.Drivetrain.FULL_SPEED);
         }
 
-        if(this.getDrivetrainMode() == RobotStates.Drivetrain.HALF_SPEED) {
+        if (this.getDrivetrainMode() == RobotStates.Drivetrain.HALF_SPEED) {
             this.motorFL.setPower(this.wheelSpeeds[0]);
             this.motorFR.setPower(this.wheelSpeeds[1]);
             this.motorBL.setPower(this.wheelSpeeds[2]);
