@@ -52,18 +52,12 @@ public class Robot extends OpMode {
             }
         }
 
-        if(this.clawToggle.toggleButton(gamepad2.right_bumper)) {
-            this.claw.setClawState(RobotStates.Claw.CLOSED);
-        } else {
-            this.claw.setClawState(RobotStates.Claw.OPEN);
-        }
-
         this.drivetrain.mechanumDrive(gamepad1.left_stick_x, gamepad1.left_stick_y, gamepad1.right_stick_x);
 
-        this.linearSlide.goToState((int) gamepad2.right_trigger, (int) gamepad2.left_trigger);
+        this.linearSlide.goToState(gamepad2);
         this.arm.goToState();
 
-        this.wrist.goToState();
+        this.wrist.goToState(gamepad2);
         this.claw.goToState();
     }
 }

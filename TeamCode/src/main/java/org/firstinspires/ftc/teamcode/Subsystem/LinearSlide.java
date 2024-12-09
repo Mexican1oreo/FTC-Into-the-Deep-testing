@@ -72,7 +72,7 @@ public class LinearSlide {
         return slideEncoderValue;
     }
 
-    public void goToState(int leftVal, int rightVal) {
+    public void goToState(Gamepad gamepad) {
         RobotStates.LinearSlide desiredState = this.getCurrentState();
 
         int desiredStateEncoderVal = this.getStateEncoderVal(desiredState);
@@ -87,12 +87,7 @@ public class LinearSlide {
         this.rightSlideMotor.setPower(rightOutput);
 
         if(desiredState == RobotStates.LinearSlide.MANUEL) {
-            customEncoderVal = rightVal * MAX_LINEAR_SLIDE_EXTENTION - leftVal * MAX_LINEAR_SLIDE_EXTENTION;
-            leftOutput = leftPIDController.calculate(customEncoderVal, -currentLeftPos);
-            rightOutput = this.rightPIDController.calculate(customEncoderVal, -currentRightPos);
-
-            this.leftSlideMotor.setPower(leftOutput);
-            this.rightSlideMotor.setPower(rightOutput);
+            this.manualMode(gamepad);
         }
 
         if(Math.abs(desiredStateEncoderVal - currentLeftPos) <= LINEAR_SLIDE_THRESHOLD) {
@@ -101,6 +96,26 @@ public class LinearSlide {
         if(Math.abs(desiredStateEncoderVal - currentRightPos) <= LINEAR_SLIDE_THRESHOLD) {
             rightSlideMotor.setPower(0);
         }
+    }
+
+    public void manualMode(Gamepad gamepad) {
+        double leftVal = -gamepad.left_trigger * 100;
+        double rightVal = gamepad.right_trigger * 100;
+
+        int currentLeftPos = this.leftSlideMotor.getCurrentPosition() * -1;
+        int currentRightPos = this.rightSlideMotor.getCurrentPosition() * -1;
+
+        this.customEncoderVal = (int) (rightVal + leftVal);
+
+        if(customEncoderVal > LINEAR_SLIDE_MANUAL_LIMIT) {
+            customEncoderVal = LINEAR_SLIDE_MANUAL_LIMIT;
+        }
+
+        double leftOutput = this.leftPIDController.calculate(this.customEncoderVal, -currentLeftPos);
+        double rightOutput = this.rightPIDController.calculate(this.customEncoderVal, -currentRightPos);
+
+        this.leftSlideMotor.setPower(leftOutput);
+        this.rightSlideMotor.setPower(rightOutput);
     }
 
     public void setSlidePower(float leftTrigger, float rightTrigger) {

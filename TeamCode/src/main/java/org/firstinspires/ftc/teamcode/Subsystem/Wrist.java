@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.Subsystem;
 
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
@@ -38,7 +39,14 @@ public class Wrist {
         return wristPos;
     }
 
-    public void goToState() {
+    public void goToState(Gamepad gamepad) {
+
+        if(gamepad.right_bumper) {
+            this.setState(RobotStates.Wrist.SCORE);
+        } else if(gamepad.left_bumper) {
+            this.setState(RobotStates.Wrist.FLOOR);
+        }
+
         RobotStates.Wrist desiredWristState = this.getCurrentState();
         double desiredWristPos = this.getWristPosition(desiredWristState);
         this.wristServo.setPosition(desiredWristPos);
