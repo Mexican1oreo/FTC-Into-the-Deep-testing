@@ -54,7 +54,7 @@ public class LinearSlide {
         currentSlideState = desiredState;
     }
 
-    public int getStateEncoderVal(RobotStates.LinearSlide linearSlideState) {
+    public void setStateEncoderVal(RobotStates.LinearSlide linearSlideState) {
         switch (linearSlideState) {
             case START_POS:
                 slideEncoderValue = 0;
@@ -68,19 +68,18 @@ public class LinearSlide {
                 slideEncoderValue = 2_000;
                 break;
         }
-        return slideEncoderValue;
     }
 
     public void goToState(Gamepad gamepad) {
         RobotStates.LinearSlide desiredState = this.getCurrentState();
 
-        int desiredStateEncoderVal = this.getStateEncoderVal(desiredState);
+        this.setStateEncoderVal(desiredState);
 
         int currentLeftPos = this.leftSlideMotor.getCurrentPosition() * -1;
-        double leftOutput = leftPIDController.calculate(desiredStateEncoderVal, -currentLeftPos);
+        double leftOutput = leftPIDController.calculate(slideEncoderValue, -currentLeftPos);
 
         int currentRightPos = this.rightSlideMotor.getCurrentPosition() * -1;
-        double rightOutput = this.rightPIDController.calculate(desiredStateEncoderVal, -currentRightPos);
+        double rightOutput = this.rightPIDController.calculate(slideEncoderValue, -currentRightPos);
 
         this.leftSlideMotor.setPower(leftOutput);
         this.rightSlideMotor.setPower(rightOutput);
@@ -89,10 +88,10 @@ public class LinearSlide {
             this.manualMode(gamepad);
         }
 
-        if (Math.abs(desiredStateEncoderVal - currentLeftPos) <= LINEAR_SLIDE_THRESHOLD) {
+        if (Math.abs(slideEncoderValue - currentLeftPos) <= LINEAR_SLIDE_THRESHOLD) {
             leftSlideMotor.setPower(0);
         }
-        if (Math.abs(desiredStateEncoderVal - currentRightPos) <= LINEAR_SLIDE_THRESHOLD) {
+        if (Math.abs(slideEncoderValue - currentRightPos) <= LINEAR_SLIDE_THRESHOLD) {
             rightSlideMotor.setPower(0);
         }
     }
